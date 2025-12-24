@@ -1,0 +1,48 @@
+{
+  "source": "/Users/shrao/Documents/MeetingAlert/MeetingAlert/MenuBarManager.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Meeting Alert",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "Test Overlay",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 249
+        }
+      },
+      {
+        "comment": "",
+        "key": "Quit",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 259
+        }
+      },
+      {
+        "comment": "",
+        "key": "Status: Active",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 236
+        }
+      },
+      {
+        "comment": "",
+        "key": "Monitoring calendar for Zoom meetings",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 240
+        }
+      }
+    ]
+  },
+  "version": 1
+}

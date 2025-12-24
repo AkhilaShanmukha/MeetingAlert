@@ -1,0 +1,49 @@
+{
+  "" : {
+    "diagnostics" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlert-primary.dia",
+    "emit-module-dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlert-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlert-primary-emit-module.dia",
+    "pch" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlert-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlert-primary.swiftdeps"
+  },
+  "/Users/shrao/Documents/MeetingAlert/MeetingAlert/ContentView.swift" : {
+    "const-values" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/shrao/Documents/MeetingAlert/MeetingAlert/MeetingAlertApp.swift" : {
+    "const-values" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.swiftconstvalues",
+    "dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.d",
+    "diagnostics" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.dia",
+    "index-unit-output-path" : "/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.o",
+    "llvm-bc" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.bc",
+    "object" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.o",
+    "swift-dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp.swiftdeps",
+    "swiftmodule" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/MeetingAlertApp~partial.swiftmodule"
+  },
+  "/Users/shrao/Documents/MeetingAlert/MeetingAlert/OverlayManager.swift" : {
+    "const-values" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.swiftconstvalues",
+    "dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.d",
+    "diagnostics" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.dia",
+    "index-unit-output-path" : "/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.o",
+    "llvm-bc" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.bc",
+    "object" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.o",
+    "swift-dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager.swiftdeps",
+    "swiftmodule" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/OverlayManager~partial.swiftmodule"
+  },
+  "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/shrao/Documents/MeetingAlert/build/Build/Intermediates.noindex/MeetingAlert.build/Debug/MeetingAlert.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}
