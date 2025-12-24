@@ -1,2 +1,0 @@
-Target dependency graph (1 target)
-Target 'MeetingAlert' in project 'MeetingAlert' (no dependencies)
