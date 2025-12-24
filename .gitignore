@@ -1,1 +1,20 @@
+# Build artifacts
 build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+
+# Distribution
+dist/
+*.dmg
+*.zip
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/
