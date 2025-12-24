@@ -6,7 +6,7 @@ class Meetingalert < Formula
   version "1.0"
   license "MIT"
 
-  depends_on :macos => ">= :ventura" # macOS 13.0+
+  depends_on macos: :ventura # macOS 13.0+
 
   def install
     # Copy the app to Applications folder
