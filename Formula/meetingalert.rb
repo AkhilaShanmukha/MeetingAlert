@@ -1,7 +1,7 @@
 class Meetingalert < Formula
   desc "Menu bar app that shows upcoming meetings and auto-opens Zoom links"
-  homepage "https://github.com/yourusername/MeetingAlert"
-  url "https://github.com/yourusername/MeetingAlert/releases/download/v1.0/MeetingAlert-1.0.zip"
+  homepage "https://github.com/AkhilaShanmukha/MeetingAlert"
+  url "https://github.com/AkhilaShanmukha/MeetingAlert/releases/download/v1.0/MeetingAlert-1.0.zip"
   sha256 "1617ae374005cb3808256fa21d75f5b02d816151c1df6962468cd0a5a14f86dc"
   version "1.0"
   license "MIT"

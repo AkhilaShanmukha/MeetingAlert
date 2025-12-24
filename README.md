@@ -21,13 +21,13 @@ A macOS menu bar app that displays your upcoming calendar meetings and automatic
 
 ```bash
 # Add the tap
-brew tap AkhilaShanmukha/meetingalert
+brew tap pshanmukrao/meetingalert
 
 # Install the app
 brew install meetingalert
 
-# Open the app
-open /opt/homebrew/Cellar/meetingalert/1.0/MeetingAlert.app
+# The app will be installed and you can open it from Applications
+# Or run: open $(brew --prefix)/Cellar/meetingalert/1.0/MeetingAlert.app
 ```
 
 ### Option 2: Manual Installation
