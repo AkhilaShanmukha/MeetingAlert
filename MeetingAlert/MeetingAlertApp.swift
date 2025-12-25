@@ -48,6 +48,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Request calendar permissions on app launch
             overlayManager.requestAccess()
             
+            // Prompt for launch at login (after a short delay)
+            LaunchAtLoginManager.shared.promptUserForLaunchAtLogin()
+            
             print("✅ App initialization complete - Menu bar item should be visible now")
             print("   Look for 'MA' text in the top-right menu bar (near the clock)")
         }

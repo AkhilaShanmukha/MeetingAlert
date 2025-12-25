@@ -1,9 +1,9 @@
 class Meetingalert < Formula
   desc "Menu bar app that shows upcoming meetings and auto-opens Zoom links"
   homepage "https://github.com/AkhilaShanmukha/MeetingAlert"
-  url "https://github.com/AkhilaShanmukha/MeetingAlert/releases/download/v1.0/MeetingAlert-1.0.zip"
-  sha256 "1617ae374005cb3808256fa21d75f5b02d816151c1df6962468cd0a5a14f86dc"
-  version "1.0"
+  url "https://github.com/AkhilaShanmukha/MeetingAlert/releases/download/v1.1/MeetingAlert-1.1.zip"
+  sha256 "803589269e6dea59766e6e8c8c16ac665789561bf8c28f69ed9d950e4f41bdb7"
+  version "1.1"
   license "MIT"
 
   depends_on macos: :ventura # macOS 13.0+

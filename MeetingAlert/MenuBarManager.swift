@@ -183,11 +183,42 @@ class MenuBarManager: NSObject, ObservableObject {
             }
         }
         
+        // Add separator
+        menu.addItem(NSMenuItem.separator())
+        
+        // Launch at Login toggle
+        let launchAtLoginItem = NSMenuItem(
+            title: "Launch at Login",
+            action: #selector(toggleLaunchAtLogin(_:)),
+            keyEquivalent: ""
+        )
+        launchAtLoginItem.target = self
+        launchAtLoginItem.state = LaunchAtLoginManager.shared.isEnabled ? .on : .off
+        menu.addItem(launchAtLoginItem)
+        
         // Add separator and quit
         menu.addItem(NSMenuItem.separator())
         let quitItem = NSMenuItem(title: "Quit Meeting Alert", action: #selector(quitApp), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
+    }
+    
+    @objc func toggleLaunchAtLogin(_ sender: NSMenuItem) {
+        let currentlyEnabled = LaunchAtLoginManager.shared.isEnabled
+        let newState = !currentlyEnabled
+        
+        if LaunchAtLoginManager.shared.setLaunchAtLogin(newState) {
+            sender.state = newState ? .on : .off
+            print("✅ Launch at login \(newState ? "enabled" : "disabled")")
+        } else {
+            // Show error alert
+            let alert = NSAlert()
+            alert.messageText = "Unable to change launch at login setting"
+            alert.informativeText = "Please try again or check System Settings > Users & Groups > Login Items"
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
     }
     
     @objc func openEvent(_ sender: NSMenuItem) {
