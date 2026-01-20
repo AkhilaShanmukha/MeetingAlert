@@ -26,32 +26,52 @@ struct FullScreenView: View {
         VStack(spacing: 30) {
             Text("Upcoming Meeting")
                 .font(.system(size: 24, weight: .light))
-                .foregroundColor(.gray)
+                .foregroundColor(.white.opacity(0.8))
             
             Text(event.title ?? "Untitled Meeting")
                 .font(.system(size: 60, weight: .bold))
+                .foregroundColor(.white)
                 .multilineTextAlignment(.center)
+                .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
             
             if let url = meetingURL {
                 Button(action: openMeeting) {
                     Text("Join \(meetingService)")
-                        .font(.title)
-                        .padding()
-                        .frame(width: 250)
-                        .background(Color.blue)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 40)
+                        .padding(.vertical, 16)
+                        .frame(minWidth: 250)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                         .foregroundColor(.white)
                         .cornerRadius(15)
+                        .shadow(color: .blue.opacity(0.4), radius: 8, x: 0, y: 4)
                 }
                 .buttonStyle(.plain)
             } else {
                 Button(action: openInCalendar) {
                     Text("Open in Calendar")
-                        .font(.title)
-                        .padding()
-                        .frame(width: 250)
-                        .background(Color.blue)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 40)
+                        .padding(.vertical, 16)
+                        .frame(minWidth: 250)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                         .foregroundColor(.white)
                         .cornerRadius(15)
+                        .shadow(color: .blue.opacity(0.4), radius: 8, x: 0, y: 4)
                 }
                 .buttonStyle(.plain)
             }
@@ -59,9 +79,11 @@ struct FullScreenView: View {
             Button("Dismiss") {
                 dismissAction()
             }
-            .foregroundColor(.gray)
+            .foregroundColor(.white.opacity(0.7))
+            .font(.system(size: 16))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(40)
     }
 
     func openMeeting() {
@@ -295,7 +317,8 @@ class OverlayManager: NSObject, ObservableObject {
         
         panel.level = .screenSaver
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        panel.backgroundColor = NSColor.black.withAlphaComponent(0.9)
+        // Use a darker background with better contrast for text readability
+        panel.backgroundColor = NSColor.black.withAlphaComponent(0.85)
         
         // --- ANIMATION STEP 1: Start Invisible ---
         panel.alphaValue = 0.0
