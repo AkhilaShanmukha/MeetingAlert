@@ -6,6 +6,21 @@ import Combine
 struct FullScreenView: View {
     let event: EKEvent
     var dismissAction: () -> Void
+    
+    var meetingURL: URL? {
+        let text = "\(event.notes ?? "") \(event.location ?? "")"
+        return findMeetingURL(in: text)
+    }
+    
+    var meetingService: String {
+        guard let url = meetingURL else { return "Meeting" }
+        let host = url.host?.lowercased() ?? ""
+        if host.contains("zoom.us") { return "Zoom" }
+        if host.contains("teams.microsoft.com") || host.contains("teams.live.com") { return "Teams" }
+        if host.contains("meet.google.com") { return "Google Meet" }
+        if host.contains("webex.com") { return "Webex" }
+        return "Meeting"
+    }
 
     var body: some View {
         VStack(spacing: 30) {
@@ -13,20 +28,33 @@ struct FullScreenView: View {
                 .font(.system(size: 24, weight: .light))
                 .foregroundColor(.gray)
             
-            Text(event.title)
+            Text(event.title ?? "Untitled Meeting")
                 .font(.system(size: 60, weight: .bold))
                 .multilineTextAlignment(.center)
             
-            Button(action: openZoom) {
-                Text("Join Zoom")
-                    .font(.title)
-                    .padding()
-                    .frame(width: 250)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
+            if let url = meetingURL {
+                Button(action: openMeeting) {
+                    Text("Join \(meetingService)")
+                        .font(.title)
+                        .padding()
+                        .frame(width: 250)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: openInCalendar) {
+                    Text("Open in Calendar")
+                        .font(.title)
+                        .padding()
+                        .frame(width: 250)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
 
             Button("Dismiss") {
                 dismissAction()
@@ -36,25 +64,46 @@ struct FullScreenView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    func openZoom() {
-        // Heuristic to find the URL in notes or location
-        let text = "\(event.notes ?? "") \(event.location ?? "")"
-        if let url = findZoomURL(in: text) {
+    func openMeeting() {
+        if let url = meetingURL {
+            NSWorkspace.shared.open(url)
+        }
+        dismissAction()
+    }
+    
+    func openInCalendar() {
+        // Open the event in Calendar app
+        if let url = URL(string: "ical://ekevent/\(event.eventIdentifier ?? "")") {
             NSWorkspace.shared.open(url)
         }
         dismissAction()
     }
 
-    func findZoomURL(in text: String) -> URL? {
+    func findMeetingURL(in text: String) -> URL? {
         let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
-        return matches?.first(where: { $0.url?.host?.contains("zoom.us") == true })?.url
+        
+        // Prioritize video conferencing links
+        if let videoLink = matches?.first(where: { match in
+            guard let url = match.url, let host = url.host?.lowercased() else { return false }
+            return host.contains("zoom.us") || 
+                   host.contains("teams.microsoft.com") || 
+                   host.contains("teams.live.com") ||
+                   host.contains("meet.google.com") ||
+                   host.contains("webex.com")
+        })?.url {
+            return videoLink
+        }
+        
+        // Return any URL found
+        return matches?.first?.url
     }
 }
 
 class OverlayManager: NSObject, ObservableObject {
     var objectWillChange = PassthroughSubject<Void, Never>()
     var window: NSPanel?
+    var checkTimer: Timer?
     let eventStore = EKEventStore()
     
     func requestAccess() {
@@ -68,7 +117,9 @@ class OverlayManager: NSObject, ObservableObject {
             eventStore.requestFullAccessToEvents { granted, error in
                 if granted {
                     print("Full Access Granted")
-                    self.scheduleTimer()
+                    DispatchQueue.main.async {
+                        self.scheduleTimer()
+                    }
                 } else {
                     print("Full Access Denied: \(String(describing: error))")
                 }
@@ -76,28 +127,92 @@ class OverlayManager: NSObject, ObservableObject {
         } else {
             // Fallback for older macOS versions
             eventStore.requestAccess(to: .event) { granted, error in
-                if granted { self.scheduleTimer() }
+                if granted {
+                    DispatchQueue.main.async {
+                        self.scheduleTimer()
+                    }
+                }
             }
         }
     }
 
     func scheduleTimer() {
-        // Check every 30 seconds for meetings starting in the next 1 minute
-        Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
-            self.checkUpcomingMeetings()
+        // Invalidate any existing timer
+        checkTimer?.invalidate()
+        
+        // Check immediately first
+        checkUpcomingMeetings()
+        
+        // Then check every 30 seconds for meetings starting in the next 1 minute
+        checkTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
+            self?.checkUpcomingMeetings()
         }
+        
+        // Ensure timer runs on main run loop
+        RunLoop.main.add(checkTimer!, forMode: .common)
+        
+        print("✅ Timer scheduled - will check for meetings every 30 seconds")
     }
 
     func checkUpcomingMeetings() {
-        let start = Date()
-        let end = Date(timeIntervalSinceNow: 60)
+        // Check for meetings that started in the last minute or are starting in the next minute
+        // This ensures we catch meetings that just started
+        let now = Date()
+        let start = Date(timeIntervalSinceNow: -60) // Look back 1 minute
+        let end = Date(timeIntervalSinceNow: 60)    // Look forward 1 minute
         let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: nil)
         let events = eventStore.events(matching: predicate)
         
-        if let meeting = events.first(where: { $0.notes?.contains("zoom.us") == true || $0.location?.contains("zoom.us") == true }) {
+        print("🔍 Checking for meetings between \(start) and \(end) - Found \(events.count) events")
+        
+        // Separate events into timed events and all-day events
+        let timedEvents = events.filter { !$0.isAllDay }
+        let allDayEvents = events.filter { $0.isAllDay }
+        
+        print("   Timed events: \(timedEvents.count), All-day events: \(allDayEvents.count)")
+        
+        // First, prioritize Zoom meetings (timed events only)
+        if let zoomMeeting = timedEvents.first(where: { event in
+            let hasZoom = event.notes?.contains("zoom.us") == true || event.location?.contains("zoom.us") == true
+            // Check if meeting is currently happening or starting within the next minute
+            let isCurrentOrUpcoming = event.startDate <= Date(timeIntervalSinceNow: 60) && 
+                                     event.endDate > now
+            return hasZoom && isCurrentOrUpcoming
+        }) {
+            print("📅 Found upcoming Zoom meeting: \(zoomMeeting.title ?? "Untitled") at \(zoomMeeting.startDate)")
             DispatchQueue.main.async {
-                self.showOverlay(for: meeting)
+                self.showOverlay(for: zoomMeeting)
             }
+            return
+        }
+        
+        // If no Zoom meeting, check for any overlapping timed calendar event
+        // Prioritize timed events over all-day events
+        if let overlappingMeeting = timedEvents.first(where: { event in
+            // Event overlaps if:
+            // 1. It starts before or at the end of our window (within next minute)
+            // 2. It ends after now (still happening or about to start)
+            let startsWithinWindow = event.startDate <= end
+            let isStillActive = event.endDate > now
+            let isCurrentOrUpcoming = event.startDate <= Date(timeIntervalSinceNow: 60)
+            
+            return startsWithinWindow && isStillActive && isCurrentOrUpcoming
+        }) {
+            print("📅 Found overlapping timed calendar event: \(overlappingMeeting.title ?? "Untitled") at \(overlappingMeeting.startDate)")
+            DispatchQueue.main.async {
+                self.showOverlay(for: overlappingMeeting)
+            }
+            return
+        }
+        
+        // Only show all-day events if there are no timed events overlapping
+        if let allDayEvent = allDayEvents.first {
+            print("📅 Found all-day calendar event: \(allDayEvent.title ?? "Untitled")")
+            DispatchQueue.main.async {
+                self.showOverlay(for: allDayEvent)
+            }
+        } else {
+            print("   No overlapping meetings found in the current time window")
         }
     }
 
