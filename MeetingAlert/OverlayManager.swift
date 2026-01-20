@@ -157,11 +157,11 @@ class OverlayManager: NSObject, ObservableObject {
     }
 
     func checkUpcomingMeetings() {
-        // Only show overlay for meetings that are starting soon (within 2 minutes of start time)
+        // Only show overlay for meetings that are starting soon (within 30 seconds of start time)
         // This prevents showing the popup repeatedly for long-running meetings
         let now = Date()
         let startWindow = Date(timeIntervalSinceNow: -30) // Look back 30 seconds (in case we missed it)
-        let endWindow = Date(timeIntervalSinceNow: 120)    // Look forward 2 minutes
+        let endWindow = Date(timeIntervalSinceNow: 30)    // Look forward 30 seconds
         
         let predicate = eventStore.predicateForEvents(withStart: startWindow, end: endWindow, calendars: nil)
         let events = eventStore.events(matching: predicate)
@@ -222,10 +222,10 @@ class OverlayManager: NSObject, ObservableObject {
                               text.contains("meet.google.com") ||
                               text.contains("webex.com")
             
-            // Only show if meeting is starting within the next 2 minutes
+            // Only show if meeting is starting within the next 30 seconds
             // or started in the last 30 seconds (to catch meetings that just started)
             let timeUntilStart = event.startDate.timeIntervalSince(now)
-            let isStartingSoon = timeUntilStart >= -30 && timeUntilStart <= 120
+            let isStartingSoon = timeUntilStart >= -30 && timeUntilStart <= 30
             
             return hasVideoLink && isStartingSoon
         }) {
@@ -246,10 +246,10 @@ class OverlayManager: NSObject, ObservableObject {
                 return false
             }
             
-            // Only show if meeting is starting within the next 2 minutes
+            // Only show if meeting is starting within the next 30 seconds
             // or started in the last 30 seconds
             let timeUntilStart = event.startDate.timeIntervalSince(now)
-            let isStartingSoon = timeUntilStart >= -30 && timeUntilStart <= 120
+            let isStartingSoon = timeUntilStart >= -30 && timeUntilStart <= 30
             
             return isStartingSoon
         }) {
