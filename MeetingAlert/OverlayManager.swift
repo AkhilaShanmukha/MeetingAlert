@@ -179,11 +179,11 @@ class OverlayManager: NSObject, ObservableObject {
     }
 
     func checkUpcomingMeetings() {
-        // Only show overlay for meetings that are starting soon (within 30 seconds of start time)
+        // Only show overlay for meetings that are starting soon (within 30 seconds) or started in the last 4 minutes
         // This prevents showing the popup repeatedly for long-running meetings
         let now = Date()
-        let startWindow = Date(timeIntervalSinceNow: -30) // Look back 30 seconds (in case we missed it)
-        let endWindow = Date(timeIntervalSinceNow: 30)    // Look forward 30 seconds
+        let startWindow = Date(timeIntervalSinceNow: -240) // Look back 4 minutes (to catch meetings that just started)
+        let endWindow = Date(timeIntervalSinceNow: 30)      // Look forward 30 seconds
         
         let predicate = eventStore.predicateForEvents(withStart: startWindow, end: endWindow, calendars: nil)
         let events = eventStore.events(matching: predicate)
@@ -200,8 +200,13 @@ class OverlayManager: NSObject, ObservableObject {
         // Strategy: Only keep identifiers for events currently in the time window
         // This automatically removes old events that have passed
         let currentEventIdentifiers = Set(events.compactMap { $0.eventIdentifier })
+        let today = Calendar.current.startOfDay(for: now)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let todayString = dateFormatter.string(from: today)
         
         // Filter: keep current events and today's all-day event keys
+        // Also keep identifiers for events that started today (to handle half-day timed events)
         shownEventIdentifiers = shownEventIdentifiers.filter { identifier in
             // Keep if it's a current event in the time window
             if currentEventIdentifiers.contains(identifier) {
@@ -209,15 +214,25 @@ class OverlayManager: NSObject, ObservableObject {
             }
             
             // For day-based keys (all-day events), check if it's from today
-            // Format: "eventIdentifier-YYYY-MM-DD" or similar
-            if identifier.contains("-") {
-                // Simple check: if the identifier contains today's date components, keep it
-                // For now, we'll be conservative and remove all day keys that aren't current
-                // The all-day event logic will re-add today's key if needed
-                return false
+            // Format: "eventIdentifier-yyyy-MM-dd"
+            if identifier.contains("-\(todayString)") {
+                // Keep today's all-day event keys
+                return true
             }
             
-            // Remove everything else (events that have passed)
+            // For timed events: check if the event started today and is still ongoing
+            // This handles half-day events (e.g., 9am-1pm) that might span several hours
+            // We'll verify the event exists and started today by checking the event store
+            if let event = eventStore.event(withIdentifier: identifier),
+               !event.isAllDay {
+                let eventStartDay = Calendar.current.startOfDay(for: event.startDate)
+                // Keep if event started today and hasn't ended yet
+                if eventStartDay == today && event.endDate > now {
+                    return true
+                }
+            }
+            
+            // Remove everything else (events that have passed, or all-day events from other days)
             return false
         }
         
@@ -245,9 +260,10 @@ class OverlayManager: NSObject, ObservableObject {
                               text.contains("webex.com")
             
             // Only show if meeting is starting within the next 30 seconds
-            // or started in the last 30 seconds (to catch meetings that just started)
+            // or started in the last 4 minutes (to catch meetings that just started)
+            // Don't show if more than 30 seconds in the future
             let timeUntilStart = event.startDate.timeIntervalSince(now)
-            let isStartingSoon = timeUntilStart >= -30 && timeUntilStart <= 30
+            let isStartingSoon = timeUntilStart >= -240 && timeUntilStart <= 30
             
             return hasVideoLink && isStartingSoon
         }) {
@@ -269,9 +285,10 @@ class OverlayManager: NSObject, ObservableObject {
             }
             
             // Only show if meeting is starting within the next 30 seconds
-            // or started in the last 30 seconds
+            // or started in the last 4 minutes
+            // Don't show if more than 30 seconds in the future
             let timeUntilStart = event.startDate.timeIntervalSince(now)
-            let isStartingSoon = timeUntilStart >= -30 && timeUntilStart <= 30
+            let isStartingSoon = timeUntilStart >= -240 && timeUntilStart <= 30
             
             return isStartingSoon
         }) {
@@ -290,7 +307,11 @@ class OverlayManager: NSObject, ObservableObject {
         if let allDayEvent = allDayEvents.first {
             let today = Calendar.current.startOfDay(for: now)
             let eventDay = Calendar.current.startOfDay(for: allDayEvent.startDate)
-            let dayKey = "\(allDayEvent.eventIdentifier ?? "")-\(eventDay)"
+            
+            // Use a consistent date format for the dayKey
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dayKey = "\(allDayEvent.eventIdentifier ?? "")-\(dateFormatter.string(from: eventDay))"
             
             if eventDay == today && !shownEventIdentifiers.contains(dayKey) {
                 print("📅 Found all-day calendar event: \(allDayEvent.title ?? "Untitled")")
@@ -298,6 +319,8 @@ class OverlayManager: NSObject, ObservableObject {
                 DispatchQueue.main.async {
                     self.showOverlay(for: allDayEvent)
                 }
+            } else if eventDay == today {
+                print("   All-day event already shown today: \(allDayEvent.title ?? "Untitled")")
             }
         } else {
             print("   No meetings starting soon found")
